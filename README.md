@@ -1,36 +1,27 @@
-# 🦅 ENCLAVE TERMINAL -- VIDEOFREE OPTIMIZATION PROTOCOL
+🦅 ENCLAVE TERMINAL – VIDEOFREE OPTIMIZATION PROTOCOL
+=====================================================
 
-> **ACCESS LEVEL:** WHITESPRING BUNKER TERMINAL\
-> **CLEARANCE:** ENCLAVE OPERATOR\
-> **STATUS:** AUTHORIZED
+> **ACCESS LEVEL:** WHITESPRING BUNKER TERMINAL**CLEARANCE:** ENCLAVE OPERATOR**STATUS:** AUTHORIZED
 
-> *"Restoring America... one optimization at a time."*\
-> --- Enclave Terminal Broadcast
+> _“Restoring America… one optimization at a time.”_— Enclave Terminal Broadcast
 
-------------------------------------------------------------------------
-
-# 📼 enclave.sh
+📼 enclave.sh
+===============
 
 ### Fallout 76 Performance Optimization Protocol
 
-This repository contains **`enclave.sh`**, a **terminal-based
-optimization system** designed to prepare your machine for **Fallout 76
-combat operations**.
+This repository contains **enclave.sh**, a **terminal-based optimization system** designed to prepare your machine for **Fallout 76 combat operations**.
 
-Through a series of **system-level adjustments**, **shader cache
-cleansing**, and **performance prioritization**, this script aligns your
-machine with the **Enclave doctrine of maximum operational efficiency**.
+Through a series of **system-level adjustments**, **shader cache cleansing**, and **performance prioritization**, this script aligns your machine with the **Enclave doctrine of maximum operational efficiency**.
 
-The script operates like a **pre-flight terminal sequence** before
-launching Fallout 76.
+The script operates like a **pre-flight terminal sequence** before launching Fallout 76.
 
 Think of it as:
 
 > **MODUS performing diagnostics on your rig before deployment.**
 
-------------------------------------------------------------------------
-
-# 🏛️ Enclave Doctrine
+🏛️ Enclave Doctrine
+====================
 
 The Enclave believes in **purity, efficiency, and control**.
 
@@ -38,221 +29,334 @@ Your operating system is no different.
 
 Modern systems accumulate:
 
--   shader cache debris
--   memory fragmentation
--   background service interference
--   power profile inefficiencies
--   GPU power throttling
+*   shader cache debris
+    
+*   memory fragmentation
+    
+*   background service interference
+    
+*   power profile inefficiencies
+    
+*   GPU power throttling
+    
 
 These are the **digital equivalent of wasteland radiation**.
 
-`enclave.sh` **cleanses these impurities**.
+enclave.sh **cleanses these impurities**.
 
-Just as the Enclave purifies America,\
-this script **purifies your runtime environment**.
+Just as the Enclave purifies America,this script **purifies your runtime environment**.
 
-------------------------------------------------------------------------
-
-# ⚙️ What This Script Does
+⚙️ What This Script Does
+========================
 
 The script performs multiple **optimization phases**.
 
 Each phase can be **approved interactively** by the operator.
 
-------------------------------------------------------------------------
-
-# 🧠 Phase 1 -- Kernel Optimization
+🧠 Phase 1 – Kernel Optimization
+================================
 
 If **Root Mode** is selected, the script modifies kernel parameters.
 
-## Changes
+These changes allow Fallout 76 to **use system resources more aggressively**.
 
-  -----------------------------------------------------------------------
-  Setting                             Purpose
-  ----------------------------------- -----------------------------------
-  `kernel.split_lock_mitigate=0`      removes performance penalties
-
-  `vm.max_map_count=2147483647`       increases memory mapping capability
-
-  `lru_gen` tuning                    improves memory reclaim efficiency
-
-  Transparent Huge Pages → `madvise`  better memory behavior for games
-
-  power profile → `performance`       CPU operates at full potential
-  -----------------------------------------------------------------------
-
-------------------------------------------------------------------------
-
-# 🔧 Phase 2 -- Service Shutdown
+🔧 Phase 2 – Service Shutdown
+=============================
 
 The script optionally shuts down background services.
 
-## Ollama
-
-Local AI inference services can consume CPU/GPU.
-
-The script temporarily stops:
-
-    ollama.service
-
-If it was running, the script records this state and restores it during
-`revert`.
-
-------------------------------------------------------------------------
-
-## Steam Shutdown
+### Steam Shutdown
 
 Steam is asked to shut down gracefully:
 
-    steam -shutdown
+steam -shutdown
 
 This prevents shader conflicts and ensures clean cache rebuilding.
 
-------------------------------------------------------------------------
-
-# 🎮 Phase 3 -- GPU Power Unlock
+🎮 Phase 3 – GPU Power Unlock
+=============================
 
 If an **NVIDIA GPU** is detected, the script performs:
 
-    nvidia-smi -pm 1
+nvidia-smi -pm 1
 
 This enables **persistence mode**, keeping the GPU initialized.
 
 Then:
 
-    nvidia-smi -pl MAX_POWER_LIMIT
+nvidia-smi -pl MAX\_POWER\_LIMIT
 
 This unlocks the **maximum power envelope** supported by the GPU.
 
-------------------------------------------------------------------------
+This prevents **power throttling during gameplay**.
 
-# 🧹 Phase 4 -- Fallout 76 Shader Cache Purge
+🧹 Phase 4 – Fallout 76 Shader Cache Purge
+==========================================
 
 Fallout 76 uses **Vulkan / Proton shader caches**.
 
+Over time these become corrupted or bloated.
+
 The script deletes:
 
-    ~/.steam/steamapps/shadercache/38400
-    ~/.local/share/Steam/steamapps/shadercache/38400
+~/.steam/steamapps/shadercache/38400~/.local/share/Steam/steamapps/shadercache/38400
 
-Where `38400` is the **Steam AppID for Fallout 76**.
+Where 38400 is the **Steam AppID for Fallout 76**.
 
 Steam will rebuild shaders automatically on launch.
 
-------------------------------------------------------------------------
+This resolves:
 
-# 🧼 Phase 5 -- RAM Cache Flush
+*   stuttering
+    
+*   frame pacing issues
+    
+*   shader compilation spikes
+    
+
+🧼 Phase 5 – RAM Cache Flush
+============================
 
 When running in **Root Mode**, the script flushes filesystem caches.
 
-    sync
-    echo 3 > /proc/sys/vm/drop_caches
-    sync
+Sequence:
 
-------------------------------------------------------------------------
+syncecho 3 > /proc/sys/vm/drop\_cachessync
 
-# 📡 Phase 6 -- Fallout Priority Watcher
+This clears:
+
+*   page cache
+    
+*   dentries
+    
+*   inode caches
+    
+
+The system enters a **fresh memory state**.
+
+📡 Phase 6 – Fallout Priority Watcher
+=====================================
 
 The script launches a **detached monitoring process**.
 
-The watcher waits for:
+This watcher waits for:
 
-    Fallout76.exe
+Fallout76.exe
 
 When detected:
 
-    renice -20
-    ionice -c1 -n0
+renice -20ionice -c1 -n0
 
 This gives Fallout **maximum CPU and I/O priority**.
 
-------------------------------------------------------------------------
+This prevents background tasks from interrupting gameplay.
 
-# 🧪 Dry Run Mode
+🧪 Dry Run Mode
+===============
 
-Simulate execution without making changes.
+You can simulate execution without making changes.
 
-    ./enclave.sh dry-run
+./enclave.sh dry-run
 
-------------------------------------------------------------------------
+The script prints every command it **would execute**.
 
-# 🔁 Reverting Changes
+Useful for:
 
-System state is stored in:
+*   testing
+    
+*   debugging
+    
+*   verifying permissions
+    
 
-    /var/tmp/videofree_revert_state.sh
+🔁 Reverting Changes
+====================
+
+The script stores system state in:
+
+/var/tmp/enclave\_revert\_state.sh
 
 To revert:
 
-    ./enclave.sh revert
+./enclave.sh revert
 
-------------------------------------------------------------------------
+This restores:
 
-# 🖥️ Operation Modes
+*   kernel parameters
+    
+*   power profile
+    
+*   GPU limits
+    
+*   services
+    
 
-Menu presented on startup:
+Your system returns to **pre-optimization state**.
 
-    1) Super User / Root Mode
-    2) Standard User Mode
-    3) Exit
+🖥️ Operation Modes
+===================
 
-## Root Mode
+When launched, the script presents a terminal menu.
 
-Requires sudo.
+1) Super User / Root Mode 2) Standard User Mode 3) Exit
+
+Root Mode
+---------
+
+Requires sudo access.
 
 Enables:
 
--   kernel tuning
--   GPU unlocking
--   service control
--   RAM purge
+*   kernel tuning
+    
+*   GPU unlocking
+    
+*   service control
+    
+*   RAM purge
+    
 
-## Standard Mode
+Recommended for **maximum performance**.
 
-Runs only user-safe operations.
+Standard Mode
+-------------
 
-------------------------------------------------------------------------
+Runs only user-safe operations:
 
-# 🧾 Example Execution
+*   shader cleanup
+    
+*   Steam shutdown
+    
+*   user process tuning
+    
 
-    chmod +x enclave.sh
-    ./enclave.sh
+No root permissions required.
 
-------------------------------------------------------------------------
+🧾 Example Execution
+====================
 
-# 🏳️ Banner
+chmod +x enclave.sh./enclave.sh
 
-The script displays a **trans flag themed Enclave banner**.
+\[ ACCESS GRANTED - WHITESPRING BUNKER TERMINAL \]Restoring America... One Optimization at a Time.Select Operation Mode:1) Super User / Root Mode2) Standard User Mode3) Exit
+
+🏳️ Banner
+==========
+
+The script displays a T**rans Flag themed Enclave banner**.
 
 Because:
 
--   the wasteland is harsh
--   the Enclave may be authoritarian
--   but **trans rights are still human rights**
+*   the wasteland is harsh
+    
+*   the Enclave may be authoritarian
+    
+*   but **trans rights are still human rights**
+    
 
 Even after nuclear annihilation.
 
-------------------------------------------------------------------------
+☢️ Fallout References Embedded
+==============================
 
-# ⚠️ Disclaimer
+The script contains references to:
+
+*   **MODUS**
+    
+*   **Whitespring Bunker**
+    
+*   **Enclave terminals**
+    
+*   **Fallout 76**
+    
+*   **S.P.E.C.I.A.L.**
+    
+*   **pre-war America**
+    
+*   **Enclave broadcasts**
+    
+
+Random quotes appear during startup.
+
+Example:
+
+> “MODUS at your service. Analyzing optimal performance vectors.”
+
+or
+
+> “My pronouns are they/them, my S.P.E.C.I.A.L. is 10/10.”
+
+🧯 Supported Systems
+====================
+
+Primarily designed for:
+
+Fedora Linux Based Systems
+
+Other distributions **may work** but are not guaranteed.
+
+The script checks:
+
+/etc/os-release
+
+If unsupported, it displays a warning.
+
+⚠️ Disclaimer
+=============
 
 This script modifies system behavior.
 
+While reversible, you should understand:
+
+*   kernel parameter changes affect system performance
+    
+*   GPU power limits increase power consumption
+    
+*   cache flushing can briefly impact disk activity
+    
+
 Use responsibly.
 
-------------------------------------------------------------------------
+🧠 Philosophy
+=============
 
-# 🦅 Enclave Closing Statement
+Most "gaming optimizers" are:
 
-Citizens of America...
+*   closed source
+    
+*   Windows-only
+    
+*   full of placebo tweaks
+    
+
+enclave.sh focuses on **real Linux performance controls**.
+
+Everything it does is:
+
+*   transparent
+    
+*   reversible
+    
+*   inspectable
+    
+
+🦅 Enclave Closing Statement
+============================
+
+> Citizens of America…
+
+The wasteland is dangerous.
+
+Raiders roam the hills.
+
+Super mutants lurk in abandoned factories.
+
+But your system?
 
 Your system will run **Fallout 76 at peak efficiency**.
 
 Because the Enclave demands **nothing less than perfection**.
 
-------------------------------------------------------------------------
+🇺🇸 Final Transmission
+=======================
 
-# 🇺🇸 Final Transmission
-
-    GLORY TO THE ENCLAVE.
-    GOD BLESS AMERICA.
+GLORY TO THE ENCLAVE.GOD BLESS AMERICA.
