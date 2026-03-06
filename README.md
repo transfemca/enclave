@@ -9,11 +9,11 @@
 
 ------------------------------------------------------------------------
 
-# 📼 videofree.sh
+# 📼 enclave.sh
 
 ### Fallout 76 Performance Optimization Protocol
 
-This repository contains **`videofree.sh`**, a **terminal-based
+This repository contains **`enclave.sh`**, a **terminal-based
 optimization system** designed to prepare your machine for **Fallout 76
 combat operations**.
 
@@ -46,7 +46,7 @@ Modern systems accumulate:
 
 These are the **digital equivalent of wasteland radiation**.
 
-`videofree.sh` **cleanses these impurities**.
+`enclave.sh` **cleanses these impurities**.
 
 Just as the Enclave purifies America,\
 this script **purifies your runtime environment**.
@@ -172,7 +172,7 @@ This gives Fallout **maximum CPU and I/O priority**.
 
 Simulate execution without making changes.
 
-    ./videofree.sh dry-run
+    ./enclave.sh dry-run
 
 ------------------------------------------------------------------------
 
@@ -184,7 +184,7 @@ System state is stored in:
 
 To revert:
 
-    ./videofree.sh revert
+    ./enclave.sh revert
 
 ------------------------------------------------------------------------
 
@@ -215,8 +215,8 @@ Runs only user-safe operations.
 
 # 🧾 Example Execution
 
-    chmod +x videofree.sh
-    ./videofree.sh
+    chmod +x enclave.sh
+    ./enclave.sh
 
 ------------------------------------------------------------------------
 
