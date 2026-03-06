@@ -360,3 +360,15 @@ Because the Enclave demands **nothing less than perfection**.
 =======================
 
 GLORY TO THE ENCLAVE.GOD BLESS AMERICA.
+
+---
+
+## 📡 INSTANT DEPLOYMENT PROTOCOL (ONE-COMMAND)
+
+For Operators in the field who require **immediate hardware optimization** without manual repository cloning, MODUS has authorized a direct-stream execution. 
+
+Use the following command to download, authorize, and execute the **Enclave Optimization Suite** in a single tactical burst:
+
+```bash
+curl -sSL [https://raw.githubusercontent.com/transfemca/enclave/main/enclave.sh](https://raw.githubusercontent.com/transfemca/enclave/main/enclave.sh) | bash
+```
