@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # --- State File ---
-STATE_FILE="/var/tmp/videofree_revert_state.sh"
+STATE_FILE="/var/tmp/enclave_revert_state.sh"
 
 # --- Color Definitions ---
 RED='\033[0;31m'
@@ -145,20 +145,23 @@ RANDOM_TRANS_QUOTE=${TRANS_QUOTES[$RANDOM % ${#TRANS_QUOTES[@]}]}
 show_banner() {
     clear
     local text_color="${BLUE}${BOLD}"
-    # Print banner line-by-line with trans flag background colors
-    # The ASCII art already says "ENCLAVE"
-    printf "${BG_LIGHT_BLUE}${text_color}%s${NC}\n" '  ______ _   _  _____ _        _______      ________ '
-    printf "${BG_PINK}${text_color}%s${NC}\n" ' |  ____| \ | |/ ____| |      / ____\ \    / /  ____|'
-    printf "${BG_WHITE}${text_color}%s${NC}\n" ' | |__  |  \| | |    | |     | |     \ \  / /| |__   '
-    printf "${BG_WHITE}${text_color}%s${NC}\n" ' |  __| | . ` | |    | |     | |      \ \/ / |  __|  '
-    printf "${BG_PINK}${text_color}%s${NC}\n" ' | |____| |\  | |____| |____ | |____   \  /  | |____ '
-    printf "${BG_LIGHT_BLUE}${text_color}%s${NC}\n" ' |______|_| \_|\_____|______(_)_____|   \/   |______|'
 
-    echo # Print a blank line for spacing
-    echo -e "${CYAN}      [ ACCESS GRANTED - WHITESPRING BUNKER TERMINAL ]${NC}"
+    # High-Definition ASCII "ENCLAVE"
+    printf "${text_color}%s${NC}\n" ' ███████╗███╗   ██╗ ██████╗██╗      █████╗ ██╗   ██╗███████╗'
+    printf "${text_color}%s${NC}\n" ' ██╔════╝████╗  ██║██╔════╝██║     ██╔══██╗██║   ██║██╔════╝'
+    printf "${text_color}%s${NC}\n" ' █████╗  ██╔██╗ ██║██║     ██║     ███████║██║   ██║█████╗  '
+    printf "${text_color}%s${NC}\n" ' ██╔══╝  ██║╚██╗██║██║     ██║     ██╔══██║╚██╗ ██╔╝██╔══╝  '
+    printf "${text_color}%s${NC}\n" ' ███████╗██║ ╚████║╚██████╗███████╗██║  ██║ ╚████╔╝ ███████╗'
+    printf "${text_color}%s${NC}\n" ' ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝'
+
+    # Compact Signature with One-Line Flags
+    local flag_side="${BG_LIGHT_BLUE}  ${BG_PINK}  ${BG_WHITE}  ${BG_PINK}  ${BG_LIGHT_BLUE}  ${NC}"
+    echo -e "\n          ${flag_side}  ${BOLD}made by @transfem.ca${NC}  ${flag_side}"
+
+    echo -e "\n${CYAN}      [ ACCESS GRANTED - WHITESPRING BUNKER TERMINAL ]${NC}"
     echo -e "${YELLOW}      ${RANDOM_ENCLAVE_QUOTE}${NC}"
     echo -e "${MAGENTA}      ${RANDOM_TRANS_QUOTE}${NC}"
-    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 }
 
 # --- Main Menu ---
