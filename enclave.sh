@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# --- MODUS OS: SYSTEMS PROVISIONING ---
-# Persona: MODUS v9.0.0 | Logic: Full Dependency & Proton-GE Integration
-# Protcol: Universal Linux (Apt/Dnf) + GE-Proton Optimization
+# --- MODUS OS: THE GLORIOUS TRANSITION ---
+# Persona: MODUS v10.0.0 | Target: Nobara Optimized / Universal Linux
+# Protocol: NVIDIA NIS Upscaling + Identity Validation + System Purity
 
 STATE_FILE="/var/tmp/modus_volatile_state.sh"
 FO76_APP_ID="1151340" 
 
-# --- Aesthetics ---
+# --- Aesthetics (The Pride of the Enclave) ---
 CYAN='\033[1;36m'
 MAGENTA='\033[1;35m'
 BLUE='\033[0;34m'
@@ -16,111 +16,112 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 BOLD='\033[1m'
 NC='\033[0m'
-TRANS_BAR='\033[106m  \033[105m  \033[107m  \033[105m  \033[106m  \033[0m'
+
+# Trans Pride Bar (The standard of the new America)
+TF_B='\033[106m  \033[0m'
+TF_P='\033[105m  \033[0m'
+TF_W='\033[107m  \033[0m'
+TRANS_BAR="${TF_B}${TF_P}${TF_W}${TF_P}${TF_B}"
 
 modus_say() { echo -e "${CYAN}${BOLD}[MODUS]:${NC} ${MAGENTA}$1${NC}"; }
 
-# --- 1. PROVISIONING (DEPENDENCIES) ---
+# --- 1. SYSTEM GENETICS (HARDWARE SPECS) ---
+get_specs() {
+    if [ -f /etc/os-release ]; then
+        source /etc/os-release
+        DISTRO=$PRETTY_NAME
+    else
+        DISTRO="Unknown Wasteland"
+    fi
+    CPU=$(grep "model name" /proc/cpuinfo | head -n1 | cut -d':' -f2 | xargs)
+    GPU=$(lspci | grep -Ei "vga|3d" | cut -d':' -f3 | xargs)
+    
+    # Nobara Optimization Check
+    if [[ "$DISTRO" =~ "Nobara" ]]; then
+        IS_NOBARA=true
+    else
+        IS_NOBARA=false
+    fi
+}
+
+# --- 2. TERMINAL PROVISIONING (DEPENDENCIES) ---
 provision_terminal() {
-    modus_say "Analyzing local terminal capabilities... searching for missing subroutines."
+    modus_say "Genetic sequencing of the terminal... searching for missing subroutines."
     DEPS=("pciutils" "util-linux" "procps" "sed" "grep" "coreutils")
     MISSING=()
-
     for tool in "${DEPS[@]}"; do
         if ! command -v "$tool" &> /dev/null; then MISSING+=("$tool"); fi
     done
 
-    if [ ${#MISSING[@]} -eq 0 ]; then
-        modus_say "All necessary hardware interfaces are already provisioned."
-        return
-    fi
-
-    modus_say "Member-Candidate, your terminal requires additional modules: ${YELLOW}${MISSING[*]}${NC}"
-    echo -ne "${BOLD}${YELLOW}▶ Authorize installation via system package manager? (y/n): ${NC}"
-    read -r auth_inst
-    
-    if [[ "$auth_inst" =~ ^[Yy]$ ]]; then
-        if command -v dnf &> /dev/null; then
-            sudo dnf install -y "${MISSING[@]}"
-        elif command -v apt &> /dev/null; then
-            sudo apt update && sudo apt install -y "${MISSING[@]}"
-        else
-            modus_say "${RED}Error: Supported package manager (dnf/apt) not found. Manual installation required.${NC}"
+    if [ ${#MISSING[@]} -gt 0 ]; then
+        modus_say "Your terminal's DNA is incomplete. Acquiring modules: ${YELLOW}${MISSING[*]}${NC}"
+        if command -v dnf &> /dev/null; then sudo dnf install -y "${MISSING[@]}"
+        elif command -v apt &> /dev/null; then sudo apt update && sudo apt install -y "${MISSING[@]}"
         fi
-    fi
-}
-
-# --- 2. SIMULATION LAYER (PROTON-GE) DETECTION ---
-detect_ge_proton() {
-    modus_say "Scanning for Advanced Simulation Layers (GE-Proton)..."
-    # Common GE-Proton paths
-    GE_PATHS=(
-        "$HOME/.steam/root/compatibilitytools.d"
-        "$HOME/.local/share/Steam/compatibilitytools.d"
-        "$HOME/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d"
-    )
-
-    LATEST_GE=""
-    for dir in "${GE_PATHS[@]}"; do
-        if [ -d "$dir" ]; then
-            # Find the "highest" GE version folder
-            LATEST_GE=$(ls -1 "$dir" | grep -i "GE-Proton" | sort -V | tail -n 1)
-            [ -n "$LATEST_GE" ] && GE_FULL_PATH="$dir/$LATEST_GE" && break
-        fi
-    done
-
-    if [ -n "$LATEST_GE" ]; then
-        modus_say "Advanced Simulation Layer detected: ${GREEN}$LATEST_GE${NC}"
-        modus_say "Integrating GE-specific performance variables (DXVK_ASYNC enabled)."
-        export DXVK_ASYNC=1
-        export GE_PROTON_ACTIVE=true
+        modus_say "Terminal transition complete. Subroutines installed."
     else
-        modus_say "${YELLOW}GE-Proton not detected. Defaulting to Standard simulation protocols.${NC}"
-        export GE_PROTON_ACTIVE=false
+        modus_say "Terminal genetics are flawless. No further provisioning required."
     fi
 }
 
-# --- 3. TEMPORAL SYNCHRONIZATION (FPS) ---
-select_fps_limit() {
-    echo -e "\n${BOLD}${CYAN}Temporal Frequency Selection:${NC}"
-    FPS_OPTS=("30" "60" "90" "120" "144" "180" "0")
-    for i in "${!FPS_OPTS[@]}"; do
-        echo -e "  $((i+1))) ${FPS_OPTS[$i]} $( [ "${FPS_OPTS[$i]}" == "0" ] && echo "(Unlimited)" )"
-    done
-    read -p "▶ Select Frequency [1-7]: " f_idx
-    FPS_LIMIT=${FPS_OPTS[$((f_idx-1))]}
-    [ -z "$FPS_LIMIT" ] && FPS_LIMIT=0
+# --- 3. NVIDIA ENHANCEMENT (NIS & LOW-RES) ---
+nvidia_upscale_protocol() {
+    modus_say "Initiating NVIDIA Image Scaling (NIS) protocols. Visual perception... enhanced."
+    echo -e "  1) Quality (75% Res - Balanced Purity)"
+    echo -e "  2) Performance (66% Res - High-Speed Transition)"
+    echo -e "  3) Ultra Performance (50% Res - Maximum Velocity)"
+    echo -e "  4) Native (No Upscaling)"
+    read -p "▶ Select Visual Protocol: " nis_choice
+
+    case $nis_choice in
+        1) export ENABLE_NIS=1; export NIS_RATIO=0.75; modus_say "NIS 'Quality' profile staged." ;;
+        2) export ENABLE_NIS=1; export NIS_RATIO=0.66; modus_say "NIS 'Performance' profile staged." ;;
+        3) export ENABLE_NIS=1; export NIS_RATIO=0.50; modus_say "NIS 'Ultra' profile staged. Visuals may be... blurred, but frames will be... lethal." ;;
+        *) export ENABLE_NIS=0; modus_say "Native resolution maintained." ;;
+    esac
 }
 
-# --- 4. HARDWARE SPECS ---
-get_specs() {
-    DISTRO=$(grep PRETTY_NAME /etc/os-release | cut -d'"' -f2)
-    CPU=$(grep "model name" /proc/cpuinfo | head -n1 | cut -d':' -f2 | xargs)
-    GPU=$(lspci | grep -Ei "vga|3d" | cut -d':' -f3 | xargs)
-}
-
-# --- 5. SYSTEM TWEAKS (VOLATILE) ---
+# --- 4. THE VOLATILE OVERLAY (SESSION TWEAKS) ---
 apply_tweaks() {
     sudo -v
+    modus_say "Stabilizing the system's core identity. Adjusting hormonal... kernel levels."
+    
+    # Save for Revert
     echo "#!/bin/bash" > "$STATE_FILE"
     echo "sudo sysctl -w kernel.split_lock_mitigate=$(sysctl -n kernel.split_lock_mitigate)" >> "$STATE_FILE"
     echo "sudo sysctl -w vm.max_map_count=$(sysctl -n vm.max_map_count)" >> "$STATE_FILE"
     
-    modus_say "Adjusting kernel parameters and CPU governors for peak combat performance..."
     sudo sysctl -w kernel.split_lock_mitigate=0 vm.max_map_count=2147483647 &>/dev/null
-    echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor &>/dev/null
-}
+    
+    # Nobara Users get a special boost
+    if [ "$IS_NOBARA" = true ]; then
+        modus_say "Nobara detected. Accessing superior kernel scheduling... Excellence is mandatory."
+    fi
 
-patch_ini() {
-    # (Simplified INI search from previous versions)
-    INI=$(find "$HOME" -name "Fallout76Prefs.ini" -path "*$FO76_APP_ID*" 2>/dev/null | head -n 1)
-    if [ -n "$INI" ]; then
-        sed -i 's/iPresentInterval=1/iPresentInterval=0/g' "$INI"
-        modus_say "Engine-level VSync disabled."
+    # GPU Power
+    if command -v nvidia-smi &>/dev/null; then
+        modus_say "Fueling the NVIDIA Fusion Core. Power limits... abolished."
+        sudo nvidia-smi -pm 1 &>/dev/null
+        sudo nvidia-smi -pl $(nvidia-smi -q -d POWER | grep "Max Power Limit" | awk '{print $5}' | head -n 1 | cut -d'.' -f1) &>/dev/null
+    elif [ -d /sys/class/drm/card0/device ]; then
+        modus_say "AMD Plasma Converters to maximum output."
+        echo "high" | sudo tee /sys/class/drm/card*/device/power_dpm_force_performance_level &>/dev/null
     fi
 }
 
-# --- UI ---
+# --- 5. PERMANENT MODIFICATIONS ---
+patch_ini() {
+    modus_say "Rewriting the DNA of the simulation. Searching archives..."
+    INI=$(find "$HOME" -name "Fallout76Prefs.ini" -path "*$FO76_APP_ID*" 2>/dev/null | head -n 1)
+    if [ -n "$INI" ]; then
+        sed -i 's/iPresentInterval=1/iPresentInterval=0/g' "$INI"
+        modus_say "Archive modified. Internal VSync has been... removed. You are free."
+    else
+        modus_say "Archive not found. The simulation must be run once to generate DNA."
+    fi
+}
+
+# --- UI DISPLAY ---
 show_banner() {
     clear
     get_specs
@@ -130,35 +131,45 @@ show_banner() {
     echo -e " ██╔══╝  ██║╚██╗██║██║     ██║     ██╔══██║╚██╗ ██╔╝██╔══╝  "
     echo -e " ███████╗██║ ╚████║╚██████╗███████╗██║  ██║ ╚████╔╝ ███████╗"
     echo -e " ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝${NC}"
-    echo -e "          ${TRANS_BAR}  ${BOLD}MODUS PROVISIONING TERMINAL${NC}  ${TRANS_BAR}"
+    echo -e "          ${TRANS_BAR}  ${BOLD}MODUS TRANSITION TERMINAL${NC}  ${TRANS_BAR}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${CYAN}OS:${NC} $DISTRO | ${CYAN}CPU:${NC} $CPU"
-    echo -e "${CYAN}GPU:${NC} $GPU"
+    if [ "$IS_NOBARA" = true ]; then
+        echo -e "${GREEN}${BOLD}OPTIMAL OS DETECTED: NOBARA PROJECT${NC}"
+    else
+        echo -e "${CYAN}OS:${NC} $DISTRO"
+    fi
+    echo -e "${CYAN}BRAIN:${NC} $CPU | ${CYAN}VISUALS:${NC} $GPU"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 }
 
-# --- MAIN ---
+# --- MAIN EXECUTION ---
 show_banner
-echo -e "${BOLD}Operational Protocols:${NC}"
-echo -e "  1) ${GREEN}PROVISION TERMINAL${NC} (Install missing apps via DNF/APT)"
-echo -e "  2) ${MAGENTA}TOTAL PURITY${NC} (Select FPS + Tweaks + Detect GE-Proton + Launch)"
-echo -e "  3) ${RED}RECOVERY${NC} (Revert session tweaks)"
+modus_say "Greetings, Member-Candidate. You look... perfectly yourself today. Shall we transition this system to its true potential?"
+
+echo -e "\n${BOLD}Select Protocol:${NC}"
+echo -e "  1) ${GREEN}TOTAL PURITY${NC} (Provision + Session Tweaks + NVIDIA Upscaling + Launch)"
+echo -e "  2) ${MAGENTA}INI PATCH ONLY${NC} (Uncap FPS permanently)"
+echo -e "  3) ${RED}RECOVERY${NC} (Revert volatile session tweaks)"
 echo -e "  4) Exit\n"
-read -p "▶ Input Choice: " main_choice
+read -p "▶ Choice: " main_choice
 
 case $main_choice in
-    1) provision_terminal ;;
-    2)
-        provision_terminal # Quick check anyway
-        detect_ge_proton
-        select_fps_limit
+    1)
+        provision_terminal
+        nvidia_upscale_protocol
         apply_tweaks
         patch_ini
-        modus_say "God bless the Enclave. God bless America. Launching simulation..."
-        DXVK_FRAME_RATE=$FPS_LIMIT steam "steam://rungameid/38400" &
+        
+        # FPS Limit Choice
+        echo -e "\n${BOLD}Set Temporal Frequency (FPS):${NC}"
+        read -p "▶ Input Limit (e.g. 60, 144, or 0 for Unlimited): " fps_val
+        
+        modus_say "Your identity is valid. Your system is pure. Your frames are optimized. God bless the Enclave."
+        DXVK_FRAME_RATE=$fps_val steam "steam://rungameid/38400" &
         ;;
+    2) patch_ini ;;
     3)
-        if [ -f "$STATE_FILE" ]; then bash "$STATE_FILE" && rm "$STATE_FILE" && modus_say "Restored."; else modus_say "No active overlay."; fi
+        if [ -f "$STATE_FILE" ]; then bash "$STATE_FILE" && rm "$STATE_FILE" && modus_say "Restoration complete."; else modus_say "No active session detected."; fi
         ;;
     *) exit 0 ;;
 esac
