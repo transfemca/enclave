@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# --- ENCLAVE OS: TOTAL PURITY SUITE ---
-# Target: Universal Linux | Persona: MODUS v5.0.0
-# "Rebuilding a better America, one frame at a time."
+# --- MODUS OS: TEMPORAL SYNCHRONIZER ---
+# Persona: MODUS v8.0.0 | Logic: DXVK Frame-Limiting Integration
+# Protocol: Volatile System Tweaks + Selective Temporal Locking
 
-STATE_FILE="/var/tmp/modus_state.sh"
-FO76_ID="38400"
+STATE_FILE="/var/tmp/modus_volatile_state.sh"
+FO76_APP_ID="1151340" 
 
-# --- Aesthetics (Trans Flag & Fallout Terminal) ---
+# --- Aesthetics ---
 CYAN='\033[1;36m'
 MAGENTA='\033[1;35m'
 BLUE='\033[0;34m'
@@ -16,158 +16,138 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 BOLD='\033[1m'
 NC='\033[0m'
+TRANS_BAR='\033[106m  \033[105m  \033[107m  \033[105m  \033[106m  \033[0m'
 
-# Trans Flag Bar
-TF_B='\033[106m  \033[0m' # Light Blue
-TF_P='\033[105m  \033[0m' # Pink
-TF_W='\033[107m  \033[0m' # White
-TRANS_BAR="${TF_B}${TF_P}${TF_W}${TF_P}${TF_B}"
+modus_say() { echo -e "${CYAN}${BOLD}[MODUS]:${NC} ${MAGENTA}$1${NC}"; }
 
-modus_say() {
-    echo -e "${CYAN}${BOLD}[MODUS]:${NC} ${MAGENTA}$1${NC}"
+# --- TEMPORAL SYNCHRONIZATION (FPS LIMITER) ---
+select_fps_limit() {
+    modus_say "Member-Candidate, select your desired Temporal Synchronization Frequency (FPS):"
+    echo -e "  1) 30  (Power Saver)"
+    echo -e "  2) 60  (Standard Issue)"
+    echo -e "  3) 90  (Enhanced Response)"
+    echo -e "  4) 120 (Elite Operative)"
+    echo -e "  5) 144 (High-Frequency Combat)"
+    echo -e "  6) 180 (Bunker Overclock)"
+    echo -e "  7) 0   (UNLIMITED - No Constraints)"
+    echo
+    read -p "▶ Select Frequency [1-7]: " fps_choice
+
+    case $fps_choice in
+        1) FPS_LIMIT=30 ;;
+        2) FPS_LIMIT=60 ;;
+        3) FPS_LIMIT=90 ;;
+        4) FPS_LIMIT=120 ;;
+        5) FPS_LIMIT=144 ;;
+        6) FPS_LIMIT=180 ;;
+        7) FPS_LIMIT=0 ;;
+        *) FPS_LIMIT=0; modus_say "Invalid input. Defaulting to Unlimited." ;;
+    esac
+    
+    [ "$FPS_LIMIT" == "0" ] && modus_say "Temporal constraints removed." || modus_say "Temporal lock set to ${YELLOW}${FPS_LIMIT} Hz${NC}."
 }
 
-# --- 1. SYSTEM RECONNAISSANCE ---
-check_dependencies() {
-    local DEPS=("pciutils" "sed" "grep" "coreutils" "procps" "util-linux")
-    local MISSING=()
-    for tool in "${DEPS[@]}"; do
-        if ! command -v "$tool" &> /dev/null; then MISSING+=("$tool"); fi
-    done
-    if [ ${#MISSING[@]} -gt 0 ]; then
-        modus_say "Member-Candidate, acquiring necessary subroutines..."
-        if command -v dnf &> /dev/null; then sudo dnf install -y "${MISSING[@]}"
-        elif command -v apt &> /dev/null; then sudo apt update && sudo apt install -y "${MISSING[@]}"
-        fi
+# --- THE PERMANENT RECORD: INI PATCHER ---
+patch_ini_fps() {
+    modus_say "Disabling engine-level VSync to allow external synchronization..."
+    SEARCH_PATHS=(
+        "$HOME/.local/share/Steam/steamapps/compatdata/$FO76_APP_ID/pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76"
+        "$HOME/.steam/steam/steamapps/compatdata/$FO76_APP_ID/pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76"
+        "$HOME/.var/app/com.valvesoftware.Steam/.steam/steam/steamapps/compatdata/$FO76_APP_ID/pfx/drive_c/users/steamuser/Documents/My Games/Fallout 76"
+    )
+
+    INI_PATH=""
+    for p in "${SEARCH_PATHS[@]}"; do [ -d "$p" ] && INI_PATH="$p/Fallout76Prefs.ini" && break; done
+
+    if [ -z "$INI_PATH" ] || [ ! -f "$INI_PATH" ]; then
+        INI_PATH=$(find "$HOME" -name "Fallout76Prefs.ini" -path "*$FO76_APP_ID*" 2>/dev/null | head -n 1)
+    fi
+
+    if [ -n "$INI_PATH" ]; then
+        cp "$INI_PATH" "${INI_PATH}.bak"
+        # Force iPresentInterval to 0 to unlock the engine's internal cap
+        sed -i 's/iPresentInterval=1/iPresentInterval=0/g' "$INI_PATH"
+        modus_say "Engine VSync disabled. Temporal control passed to MODUS."
+    else
+        modus_say "${RED}Error: Could not locate configuration archive.${NC}"
     fi
 }
 
-get_specs() {
-    DISTRO=$(grep PRETTY_NAME /etc/os-release | cut -d'"' -f2)
-    CPU=$(grep "model name" /proc/cpuinfo | head -n1 | cut -d':' -f2 | xargs)
-    RAM=$(free -h | awk '/^Mem:/ {print $2}')
-    GPU_NAME=$(lspci | grep -Ei "vga|3d" | cut -d':' -f3 | xargs)
-    GPU_TYPE="GENERIC"
-    [[ "$GPU_NAME" =~ "NVIDIA" ]] && GPU_TYPE="NVIDIA"
-    [[ "$GPU_NAME" =~ "AMD" ]] && GPU_TYPE="AMD"
-}
-
-# --- 2. THE OPTIMIZATION ARSENAL ---
-apply_optimizations() {
+# --- THE VOLATILE OVERLAY (Temporary Tweaks) ---
+apply_tweaks() {
     sudo -v
+    # Capture state for Revert
     echo "#!/bin/bash" > "$STATE_FILE"
-    
-    # A. KERNEL PURITY (CPU/Memory)
-    modus_say "Applying Kernel Purity protocols... Disabling Overseer watchdogs."
-    echo "export ORIG_SPLIT='$(sysctl -n kernel.split_lock_mitigate)'" >> "$STATE_FILE"
-    echo "export ORIG_SWAP='$(sysctl -n vm.swappiness)'" >> "$STATE_FILE"
-    echo "export ORIG_WATCHDOG='$(sysctl -n kernel.nmi_watchdog)'" >> "$STATE_FILE"
-    
-    sudo sysctl -w kernel.split_lock_mitigate=0 &>/dev/null
-    sudo sysctl -w vm.max_map_count=2147483647 &>/dev/null
-    sudo sysctl -w vm.swappiness=10 &>/dev/null # Keep data in RAM
-    sudo sysctl -w kernel.nmi_watchdog=0 &>/dev/null # Free CPU cycles
-    
-    # B. NETWORK UPLINK (TCP Fast Open)
-    modus_say "Securing Bunker Uplink... Reducing packet latency."
-    echo "export ORIG_TCP='$(sysctl -n net.ipv4.tcp_fastopen)'" >> "$STATE_FILE"
-    sudo sysctl -w net.ipv4.tcp_fastopen=3 &>/dev/null
-
-    # C. POWER & THERMALS
+    echo "sudo sysctl -w kernel.split_lock_mitigate=$(sysctl -n kernel.split_lock_mitigate)" >> "$STATE_FILE"
+    echo "sudo sysctl -w vm.max_map_count=$(sysctl -n vm.max_map_count)" >> "$STATE_FILE"
     if [ -f /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ]; then
-        echo "export ORIG_GOV='$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)'" >> "$STATE_FILE"
-        echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor &>/dev/null
+        echo "echo $(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor) | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor" >> "$STATE_FILE"
     fi
 
-    # D. GPU OVERCLOCKING
-    if [ "$GPU_TYPE" == "NVIDIA" ]; then
-        modus_say "Energizing X-01 Fusion Cores (NVIDIA)..."
+    modus_say "Applying session-only system overlays..."
+    sudo sysctl -w kernel.split_lock_mitigate=0 vm.max_map_count=2147483647 &>/dev/null
+    echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor &>/dev/null
+    
+    if command -v nvidia-smi &>/dev/null; then
         sudo nvidia-smi -pm 1 &>/dev/null
-        MAX_PWR=$(nvidia-smi -q -d POWER | grep "Max Power Limit" | awk '{print $5}' | head -n 1)
-        sudo nvidia-smi -pl "${MAX_PWR%.*}" &>/dev/null
-    elif [ "$GPU_TYPE" == "AMD" ]; then
-        modus_say "Optimizing Plasma Converters (AMD)..."
+        sudo nvidia-smi -pl $(nvidia-smi -q -d POWER | grep "Max Power Limit" | awk '{print $5}' | head -n 1 | cut -d'.' -f1) &>/dev/null
+    elif [ -d /sys/class/drm/card0/device ]; then
         echo "high" | sudo tee /sys/class/drm/card*/device/power_dpm_force_performance_level &>/dev/null
     fi
 }
 
-# --- 3. UI: TERMINAL INTERFACE ---
+# --- RECOVERY PROTOCOL ---
+revert_protocols() {
+    if [ -f "$STATE_FILE" ]; then
+        modus_say "Purging active overlays..."
+        bash "$STATE_FILE"
+        rm "$STATE_FILE"
+        modus_say "System restored. Your identity remains valid. God bless the Enclave."
+    else
+        modus_say "No active overlays detected."
+    fi
+}
+
+# --- UI ---
 show_banner() {
     clear
-    echo -e "${BLUE}${BOLD}"
-    cat << "EOF"
- ███████╗███╗   ██╗ ██████╗██╗      █████╗ ██╗   ██╗███████╗
- ██╔════╝████╗  ██║██╔════╝██║     ██╔══██╗██║   ██║██╔════╝
- █████╗  ██╔██╗ ██║██║     ██║     ███████║██║   ██║█████╗  
- ██╔══╝  ██║╚██╗██║██║     ██║     ██╔══██║╚██╗ ██╔╝██╔══╝  
- ███████╗██║ ╚████║╚██████╗███████╗██║  ██║ ╚████╔╝ ███████╗
- ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝
-EOF
-    echo -e "          ${TRANS_BAR}  ${BOLD}MODUS UNIVERSAL v5.0.0${NC}  ${TRANS_BAR}"
-    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${CYAN}${BOLD}TERMINAL DATA:${NC}"
-    echo -e "  ${BOLD}SYSTEM:${NC} $DISTRO"
-    echo -e "  ${BOLD}BRAIN:${NC}  $CPU"
-    echo -e "  ${BOLD}MEMORY:${NC} $RAM"
-    echo -e "  ${BOLD}VISUAL:${NC} $GPU_NAME"
-    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${YELLOW}  \"Gender is a customization. Strength is a requirement.\"${NC}"
+    echo -e "${BLUE}${BOLD} ███████╗███╗   ██╗ ██████╗██╗      █████╗ ██╗   ██╗███████╗"
+    echo -e " ██╔════╝████╗  ██║██╔════╝██║     ██╔══██╗██║   ██║██╔════╝"
+    echo -e " █████╗  ██╔██╗ ██║██║     ██║     ███████║██║   ██║█████╗  "
+    echo -e " ██╔══╝  ██║╚██╗██║██║     ██║     ██╔══██║╚██╗ ██╔╝██╔══╝  "
+    echo -e " ███████╗██║ ╚████║╚██████╗███████╗██║  ██║ ╚████╔╝ ███████╗"
+    echo -e " ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝${NC}"
+    echo -e "          ${TRANS_BAR}  ${BOLD}MODUS TEMPORAL TERMINAL${NC}  ${TRANS_BAR}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 }
 
-# --- 4. REVERT ---
-revert_changes() {
-    if [ ! -f "$STATE_FILE" ]; then
-        modus_say "No saved state. System is in 'Wastelander' mode."
-        exit 1
-    fi
-    source "$STATE_FILE"
-    modus_say "Restoring pre-war settings... Goodbye, Member-Candidate."
-    sudo sysctl -w kernel.split_lock_mitigate="$ORIG_SPLIT" &>/dev/null
-    sudo sysctl -w vm.swappiness="$ORIG_SWAP" &>/dev/null
-    sudo sysctl -w kernel.nmi_watchdog="$ORIG_WATCHDOG" &>/dev/null
-    sudo sysctl -w net.ipv4.tcp_fastopen="$ORIG_TCP" &>/dev/null
-    [ -n "$ORIG_GOV" ] && echo "$ORIG_GOV" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor &>/dev/null
-    rm -f "$STATE_FILE"
-}
-
-# --- EXECUTION ---
-check_dependencies
-get_specs
-
-if [ "$1" == "revert" ]; then revert_changes; exit 0; fi
-
+# --- MAIN ---
 show_banner
-modus_say "You look... different today, Member-Candidate. More... yourself. I like it. Shall we optimize your combat effectiveness?"
-echo -ne "\n${BOLD}${YELLOW}▶ Authorize Protocol: TOTAL PURITY? (y/n): ${NC}"
-read -r auth
+echo -e "${BOLD}Select Operation Mode:${NC}"
+echo -e "  1) ${GREEN}TOTAL PURITY${NC} (Recommended: Everything + FPS Limit Selection)"
+echo -e "  2) ${CYAN}SELF-GUIDED${NC} (Manual Protocol Selection)"
+echo -e "  3) ${RED}RECOVERY${NC} (Manual Revert of Session Tweaks)"
+echo -e "  4) Exit\n"
+read -p "▶ Choose Protocol: " choice
 
-if [[ "$auth" =~ ^[Yy]$ ]]; then
-    apply_optimizations
-    
-    # Watcher Background Process
-    watcher() {
-        while true; do
-            PID=$(pgrep -f "Fallout76.exe")
-            if [ -n "$PID" ]; then
-                sudo renice -n -20 -p "$PID"
-                sudo ionice -c 1 -n 0 -p "$PID"
-                break
-            fi
-            sleep 5
-        done
-    }
-    export -f watcher
-    nohup bash -c watcher >/dev/null 2>&1 &
-
-    # --- THE X-01 ENVIRONMENT PROTOCOL ---
-    # These flags improve Proton/DXVK performance
-    export DXVK_ASYNC=1
-    export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1
-    export VK_ICD_FILENAMES=$(ls /usr/share/vulkan/icd.d/* | head -n 1)
-
-    modus_say "Launching Fallout 76. Your pronouns are valid. Your frame rates are lethal. God bless the Enclave."
-    steam "steam://rungameid/$FO76_ID" &
-else
-    modus_say "Disconnected. Terminal locking..."
-fi
+case $choice in
+    1)
+        select_fps_limit
+        apply_tweaks
+        patch_ini_fps
+        modus_say "Initializing Fallout 76 with requested Temporal Lock..."
+        # DXVK_FRAME_RATE is the magic variable that limits FPS via the Vulkan wrapper
+        DXVK_FRAME_RATE=$FPS_LIMIT steam "steam://rungameid/38400" &
+        ;;
+    2)
+        read -p "Set FPS Limit? (y/n): " f && [[ $f =~ ^[Yy]$ ]] && select_fps_limit
+        read -p "Apply Session Tweaks? (y/n): " s && [[ $s =~ ^[Yy]$ ]] && apply_tweaks
+        read -p "Patch INI (Permanent VSync Unlock)? (y/n): " i && [[ $i =~ ^[Yy]$ ]] && patch_ini_fps
+        modus_say "Launching with selected profile..."
+        DXVK_FRAME_RATE=$FPS_LIMIT steam "steam://rungameid/38400" &
+        ;;
+    3)
+        revert_protocols
+        ;;
+    *) exit 0 ;;
+esac
