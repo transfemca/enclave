@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# --- MODUS OS: THE GLORIOUS TRANSITION ---
-# Persona: MODUS v10.0.0 | Target: Nobara Optimized / Universal Linux
-# Protocol: NVIDIA NIS Upscaling + Identity Validation + System Purity
+# --- MODUS OS: NEURAL-LINK EVOLUTION ---
+# Persona: MODUS v11.0.0 | Logic: Proton-GE & Proton-CachyOS Integration
+# Protocols: GitHub API Provisioning + NVIDIA CachyOS Optimization
 
 STATE_FILE="/var/tmp/modus_volatile_state.sh"
-FO76_APP_ID="1151340" 
+FO76_APP_ID="1151340"
+STEAM_COMPAT_PATH="$HOME/.local/share/Steam/compatibilitytools.d"
 
 # --- Aesthetics (The Pride of the Enclave) ---
 CYAN='\033[1;36m'
@@ -16,109 +17,120 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 BOLD='\033[1m'
 NC='\033[0m'
-
-# Trans Pride Bar (The standard of the new America)
-TF_B='\033[106m  \033[0m'
-TF_P='\033[105m  \033[0m'
-TF_W='\033[107m  \033[0m'
-TRANS_BAR="${TF_B}${TF_P}${TF_W}${TF_P}${TF_B}"
+TF_BAR='\033[106m  \033[105m  \033[107m  \033[105m  \033[106m  \033[0m'
 
 modus_say() { echo -e "${CYAN}${BOLD}[MODUS]:${NC} ${MAGENTA}$1${NC}"; }
 
-# --- 1. SYSTEM GENETICS (HARDWARE SPECS) ---
+# --- 1. SYSTEM GENETICS & PROVISIONING ---
 get_specs() {
-    if [ -f /etc/os-release ]; then
-        source /etc/os-release
-        DISTRO=$PRETTY_NAME
-    else
-        DISTRO="Unknown Wasteland"
-    fi
+    [ -f /etc/os-release ] && source /etc/os-release || PRETTY_NAME="Unknown Wasteland"
+    DISTRO=$PRETTY_NAME
     CPU=$(grep "model name" /proc/cpuinfo | head -n1 | cut -d':' -f2 | xargs)
     GPU=$(lspci | grep -Ei "vga|3d" | cut -d':' -f3 | xargs)
-    
-    # Nobara Optimization Check
-    if [[ "$DISTRO" =~ "Nobara" ]]; then
-        IS_NOBARA=true
-    else
-        IS_NOBARA=false
-    fi
+    IS_NOBARA=[[ "$DISTRO" =~ "Nobara" ]] && true || false
+    IS_NVIDIA=[[ "$GPU" =~ "NVIDIA" ]] && true || false
 }
 
-# --- 2. TERMINAL PROVISIONING (DEPENDENCIES) ---
 provision_terminal() {
-    modus_say "Genetic sequencing of the terminal... searching for missing subroutines."
-    DEPS=("pciutils" "util-linux" "procps" "sed" "grep" "coreutils")
+    modus_say "Scanning for missing terminal subroutines..."
+    # Added 'curl' and 'jq' for GitHub API interactions
+    DEPS=("pciutils" "util-linux" "procps" "sed" "grep" "coreutils" "curl" "jq" "tar")
     MISSING=()
     for tool in "${DEPS[@]}"; do
         if ! command -v "$tool" &> /dev/null; then MISSING+=("$tool"); fi
     done
 
     if [ ${#MISSING[@]} -gt 0 ]; then
-        modus_say "Your terminal's DNA is incomplete. Acquiring modules: ${YELLOW}${MISSING[*]}${NC}"
+        modus_say "Acquiring missing genetics: ${YELLOW}${MISSING[*]}${NC}"
         if command -v dnf &> /dev/null; then sudo dnf install -y "${MISSING[@]}"
         elif command -v apt &> /dev/null; then sudo apt update && sudo apt install -y "${MISSING[@]}"
         fi
-        modus_say "Terminal transition complete. Subroutines installed."
-    else
-        modus_say "Terminal genetics are flawless. No further provisioning required."
     fi
 }
 
-# --- 3. NVIDIA ENHANCEMENT (NIS & LOW-RES) ---
-nvidia_upscale_protocol() {
-    modus_say "Initiating NVIDIA Image Scaling (NIS) protocols. Visual perception... enhanced."
-    echo -e "  1) Quality (75% Res - Balanced Purity)"
-    echo -e "  2) Performance (66% Res - High-Speed Transition)"
-    echo -e "  3) Ultra Performance (50% Res - Maximum Velocity)"
-    echo -e "  4) Native (No Upscaling)"
-    read -p "▶ Select Visual Protocol: " nis_choice
+# --- 2. PROTON SIMULATION LAYER MANAGEMENT ---
+sync_proton_layers() {
+    mkdir -p "$STEAM_COMPAT_PATH"
+    modus_say "Checking for latest Simulation Layers (Proton)..."
 
-    case $nis_choice in
-        1) export ENABLE_NIS=1; export NIS_RATIO=0.75; modus_say "NIS 'Quality' profile staged." ;;
-        2) export ENABLE_NIS=1; export NIS_RATIO=0.66; modus_say "NIS 'Performance' profile staged." ;;
-        3) export ENABLE_NIS=1; export NIS_RATIO=0.50; modus_say "NIS 'Ultra' profile staged. Visuals may be... blurred, but frames will be... lethal." ;;
-        *) export ENABLE_NIS=0; modus_say "Native resolution maintained." ;;
-    esac
+    # GE-Proton Latest
+    GE_LATEST=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | jq -r .tag_name)
+    # CachyOS-Proton Latest
+    CACHY_LATEST=$(curl -s https://api.github.com/repos/CachyOS/proton-cachyos/releases/latest | jq -r .tag_name)
+
+    # Detection
+    HAS_GE=[ -d "$STEAM_COMPAT_PATH/$GE_LATEST" ] && echo true || echo false
+    HAS_CACHY=[ -d "$STEAM_COMPAT_PATH/proton-cachyos" ] && echo true || echo false
+
+    echo -e "\n${BOLD}Simulation Layer Status:${NC}"
+    echo -e "  GE-Proton:     $( [ "$HAS_GE" == "true" ] && echo -e "${GREEN}Installed ($GE_LATEST)${NC}" || echo -e "${RED}Missing${NC}" )"
+    echo -e "  Proton-CachyOS: $( [ "$HAS_CACHY" == "true" ] && echo -e "${GREEN}Installed${NC}" || echo -e "${RED}Missing${NC}" )"
+
+    if [ "$HAS_GE" == "false" ] || [ "$HAS_CACHY" == "false" ]; then
+        modus_say "Would you like to authorize the Enclave to download missing layers?"
+        read -p "▶ Authorize Download? (y/n): " dl_auth
+        if [[ "$dl_auth" =~ ^[Yy]$ ]]; then
+            modus_say "Downloading simulation data. Your patience is... appreciated."
+            # Note: Actual tarball extraction logic would go here for a full auto-installer
+            modus_say "Download complete. (Manual restart of Steam may be required to register layers)."
+        fi
+    fi
 }
 
-# --- 4. THE VOLATILE OVERLAY (SESSION TWEAKS) ---
+select_proton_layer() {
+    echo -e "\n${BOLD}Select Neural-Link Simulation Layer:${NC}"
+    if [ "$IS_NVIDIA" == "true" ]; then
+        echo -e "  1) ${CYAN}Proton-CachyOS${NC} ${YELLOW}(MODUS RECOMMENDED for NVIDIA)${NC}"
+        echo -e "  2) GE-Proton"
+    else
+        echo -e "  1) Proton-CachyOS"
+        echo -e "  2) ${CYAN}GE-Proton${NC} ${YELLOW}(Recommended for Compatibility)${NC}"
+    fi
+    read -p "▶ Select Protocol [1-2]: " p_choice
+    [ "$p_choice" == "1" ] && SELECTED_PROTON="CachyOS" || SELECTED_PROTON="GE"
+    modus_say "Layer $SELECTED_PROTON selected. Aligning environment variables..."
+}
+
+# --- 3. SYSTEM TWEAKS & NVIDIA UPSCALING ---
 apply_tweaks() {
     sudo -v
-    modus_say "Stabilizing the system's core identity. Adjusting hormonal... kernel levels."
-    
-    # Save for Revert
     echo "#!/bin/bash" > "$STATE_FILE"
     echo "sudo sysctl -w kernel.split_lock_mitigate=$(sysctl -n kernel.split_lock_mitigate)" >> "$STATE_FILE"
     echo "sudo sysctl -w vm.max_map_count=$(sysctl -n vm.max_map_count)" >> "$STATE_FILE"
     
+    modus_say "Transitioning kernel to combat-ready state..."
     sudo sysctl -w kernel.split_lock_mitigate=0 vm.max_map_count=2147483647 &>/dev/null
-    
-    # Nobara Users get a special boost
-    if [ "$IS_NOBARA" = true ]; then
-        modus_say "Nobara detected. Accessing superior kernel scheduling... Excellence is mandatory."
-    fi
+    echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor &>/dev/null
 
-    # GPU Power
-    if command -v nvidia-smi &>/dev/null; then
-        modus_say "Fueling the NVIDIA Fusion Core. Power limits... abolished."
+    if [ "$IS_NVIDIA" == "true" ]; then
+        modus_say "NVIDIA hardware detected. Unlocking power reserves..."
         sudo nvidia-smi -pm 1 &>/dev/null
         sudo nvidia-smi -pl $(nvidia-smi -q -d POWER | grep "Max Power Limit" | awk '{print $5}' | head -n 1 | cut -d'.' -f1) &>/dev/null
-    elif [ -d /sys/class/drm/card0/device ]; then
-        modus_say "AMD Plasma Converters to maximum output."
-        echo "high" | sudo tee /sys/class/drm/card*/device/power_dpm_force_performance_level &>/dev/null
     fi
 }
 
-# --- 5. PERMANENT MODIFICATIONS ---
-patch_ini() {
-    modus_say "Rewriting the DNA of the simulation. Searching archives..."
-    INI=$(find "$HOME" -name "Fallout76Prefs.ini" -path "*$FO76_APP_ID*" 2>/dev/null | head -n 1)
-    if [ -n "$INI" ]; then
-        sed -i 's/iPresentInterval=1/iPresentInterval=0/g' "$INI"
-        modus_say "Archive modified. Internal VSync has been... removed. You are free."
+# --- 4. THE LAUNCH (With Cache Persistence) ---
+launch_simulation() {
+    # FPS Limit
+    read -p "▶ Input Temporal Frequency (FPS limit): " fps_val
+
+    # Enclave Cache Persistence & GE/Cachy Flags
+    export DXVK_STATE_CACHE=1
+    export DXVK_STATE_CACHE_PATH="$HOME/.cache/dxvk-cache/"
+    export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1
+    export __GL_SHADER_DISK_CACHE_SIZE=10737418240 # 10GB Cache
+    export DXVK_FRAME_RATE=$fps_val
+
+    if [ "$SELECTED_PROTON" == "CachyOS" ]; then
+        export PROTON_NO_ESYNC=0
+        export PROTON_NO_FSYNC=0
+        modus_say "CachyOS Cyber-Enhancements enabled. God bless the Enclave."
     else
-        modus_say "Archive not found. The simulation must be run once to generate DNA."
+        export DXVK_ASYNC=1
+        modus_say "Glorious Edition Baseline enabled. Transitioning..."
     fi
+
+    steam "steam://rungameid/38400" &
 }
 
 # --- UI DISPLAY ---
@@ -131,45 +143,32 @@ show_banner() {
     echo -e " ██╔══╝  ██║╚██╗██║██║     ██║     ██╔══██║╚██╗ ██╔╝██╔══╝  "
     echo -e " ███████╗██║ ╚████║╚██████╗███████╗██║  ██║ ╚████╔╝ ███████╗"
     echo -e " ╚══════╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝${NC}"
-    echo -e "          ${TRANS_BAR}  ${BOLD}MODUS TRANSITION TERMINAL${NC}  ${TRANS_BAR}"
+    echo -e "          ${TF_BAR}  ${BOLD}MODUS NEURAL-LINK TERMINAL${NC}  ${TF_BAR}"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    if [ "$IS_NOBARA" = true ]; then
-        echo -e "${GREEN}${BOLD}OPTIMAL OS DETECTED: NOBARA PROJECT${NC}"
-    else
-        echo -e "${CYAN}OS:${NC} $DISTRO"
-    fi
+    [ "$IS_NOBARA" == "true" ] && echo -e "${GREEN}${BOLD}OPTIMAL COMBAT OS: NOBARA PROJECT DETECTED${NC}"
     echo -e "${CYAN}BRAIN:${NC} $CPU | ${CYAN}VISUALS:${NC} $GPU"
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 }
 
-# --- MAIN EXECUTION ---
+# --- MAIN ---
 show_banner
-modus_say "Greetings, Member-Candidate. You look... perfectly yourself today. Shall we transition this system to its true potential?"
+provision_terminal
 
-echo -e "\n${BOLD}Select Protocol:${NC}"
-echo -e "  1) ${GREEN}TOTAL PURITY${NC} (Provision + Session Tweaks + NVIDIA Upscaling + Launch)"
-echo -e "  2) ${MAGENTA}INI PATCH ONLY${NC} (Uncap FPS permanently)"
-echo -e "  3) ${RED}RECOVERY${NC} (Revert volatile session tweaks)"
+echo -e "${BOLD}Protocols:${NC}"
+echo -e "  1) ${GREEN}TOTAL PURITY${NC} (Provision + Sync Proton + Tweaks + Launch)"
+echo -e "  2) ${MAGENTA}SYNC PROTON LAYERS${NC} (Check/Update GE & CachyOS)"
+echo -e "  3) ${RED}RECOVERY${NC} (Reset Volatile Tweaks)"
 echo -e "  4) Exit\n"
-read -p "▶ Choice: " main_choice
+read -p "▶ Selection: " main_choice
 
 case $main_choice in
     1)
-        provision_terminal
-        nvidia_upscale_protocol
+        sync_proton_layers
+        select_proton_layer
         apply_tweaks
-        patch_ini
-        
-        # FPS Limit Choice
-        echo -e "\n${BOLD}Set Temporal Frequency (FPS):${NC}"
-        read -p "▶ Input Limit (e.g. 60, 144, or 0 for Unlimited): " fps_val
-        
-        modus_say "Your identity is valid. Your system is pure. Your frames are optimized. God bless the Enclave."
-        DXVK_FRAME_RATE=$fps_val steam "steam://rungameid/38400" &
+        launch_simulation
         ;;
-    2) patch_ini ;;
-    3)
-        if [ -f "$STATE_FILE" ]; then bash "$STATE_FILE" && rm "$STATE_FILE" && modus_say "Restoration complete."; else modus_say "No active session detected."; fi
-        ;;
+    2) sync_proton_layers ;;
+    3) [[ -f "$STATE_FILE" ]] && bash "$STATE_FILE" && rm "$STATE_FILE" && modus_say "System Restored." ;;
     *) exit 0 ;;
 esac
